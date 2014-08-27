@@ -4,7 +4,6 @@ from simple_backup.app.backup import backup_db, backup_db_per_table
 import argparse
 
 
-
 def main():
     parser = argparse.ArgumentParser(description='Example with long option names')
     group1 = parser.add_mutually_exclusive_group()
