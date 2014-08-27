@@ -86,6 +86,7 @@ def backup_db(dir_pref, num_dir, type):
             print out
     except MySQLdb.OperationalError, err:
         error = unicode(err)
+        print error
         #send(Config.MESSAGE["1"], error)
 
 def backup_db_per_table(dir_pref, num_dir, type):
@@ -156,6 +157,7 @@ def backup_db_per_table(dir_pref, num_dir, type):
                 print out
     except MySQLdb.OperationalError, err:
         error = unicode(err)
+        print error
         #send(Config.MESSAGE["1"], error)
 
 
