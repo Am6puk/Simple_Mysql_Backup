@@ -18,9 +18,6 @@ class Model(object):
         self.db = MySQLdb.connect(host=self.host, user=self.user, passwd=self.password)
         self.cursor = self.db.cursor()
 
-    def __del__(self):
-        self.db.close()
-
 
 class GetBase(Model):
     def list_bases(self, exclude):
