@@ -22,25 +22,24 @@ class Model(object):
         self.db.close()
 
 
-
-class Get_base(Model):
+class GetBase(Model):
     def list_bases(self, exclude):
         sql = r"show databases"
         self.cursor.execute(sql)
         data = self.cursor.fetchall()
-        list = []
+        lists = []
         for i in data:
             if not i[0] in exclude:
-                list.append(i[0])
-        return list
+                lists.append(i[0])
+        return lists
 
     def table_list(self, database):
-        sql1 = r"use `{0}`".format(database)
-        sql2 = r"SHOW TABLES"
-        self.cursor.execute(sql1)
-        self.cursor.execute(sql2)
+        set_base = r"use `{0}`".format(database)
+        get_tables = r"SHOW TABLES"
+        self.cursor.execute(set_base)
+        self.cursor.execute(get_tables)
         data = self.cursor.fetchall()
-        list = []
+        lists = []
         for i in data:
-            list.append(i[0])
-        return list
+            lists.append(i[0])
+        return lists
