@@ -9,7 +9,7 @@ except ImportError:
     pipinstall = subprocess.Popen("apt-get install python-mysqldb -y", shell=True)
     pipinstall.wait()
     import MySQLdb
-from simple_backup.modules.mysql import Get_base
+from simple_backup.modules.mysql import GetBase
 from simple_backup.modules.mail import send
 
 name = 'simple_backup.conf'
@@ -64,7 +64,7 @@ def backup_db(dir_pref, num_dir, type):
         shutil.rmtree(backup_dir+dic[age[0]])
 
     try:
-        bases = Get_base()
+        bases = GetBase()
         sorted_list = bases.list_bases(exclude)
         for base in sorted_list:
             print 'Now backuping database {0}'.format(base)
@@ -128,7 +128,7 @@ def backup_db_per_table(dir_pref, num_dir, type):
         shutil.rmtree(backup_dir+dic[age[0]])
 
     try:
-        bases = Get_base()
+        bases = GetBase()
         sorted_list = bases.list_bases(exclude)
         table_exclude = config.get('table_exclude', 'EXCLUDE_LIST')
         for base in sorted_list:
