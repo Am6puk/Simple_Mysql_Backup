@@ -14,14 +14,15 @@ from simple_backup.modules.mail import send
 
 name = 'simple_backup.conf'
 conf_path = '/etc/simple_backup/'
+section = 'mysql'
 config = ConfigParser.ConfigParser()
 config.read(conf_path+name)
-host = config.get('mysql', 'MYSQL_HOST')
-user = config.get('mysql', 'MYSQL_USER')
-password = config.get('mysql', 'MYSQL_PASS')
-BACKUP_DIR = config.get('mysql', 'BACKUP_DIR')
-DUMP_PERF = config.get('mysql', 'DUMP_PERF')
-HOTCOPY_PREF = config.get('mysql', 'HOTCOPY_PREF')
+host = config.get(section, 'MYSQL_HOST')
+user = config.get(section, 'MYSQL_USER')
+password = config.get(section, 'MYSQL_PASS')
+BACKUP_DIR = config.get(section, 'BACKUP_DIR')
+DUMP_PERF = config.get(section, 'DUMP_PERF')
+HOTCOPY_PREF = config.get(section, 'HOTCOPY_PREF')
 
 
 

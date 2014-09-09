@@ -2,10 +2,19 @@
 # -*- coding: utf8 -*-
 from simple_backup.app.backup import backup_db, backup_db_per_table
 import argparse
-
+import ConfigParser
 
 def main():
-    parser = argparse.ArgumentParser(description='Example with long option names')
+    name = 'simple_backup.conf'
+    conf_path = '/etc/simple_backup/'
+    section = 'mysql'
+    config = ConfigParser.ConfigParser()
+    config.read(conf_path+name)
+    HR_NUM_COPY = config.get(section, 'HR_NUM_COPY')
+    DL_NUM_COPY = config.get(section, 'DL_NUM_COPY')
+    WK_NUM_COPY = config.get(section, 'WK_NUM_COPY')
+    MN_NUM_COPY = config.get(section, 'MN_NUM_COPY')
+    parser = argparse.ArgumentParser(description='Simple Mysql Backup option names')
     group1 = parser.add_mutually_exclusive_group()
     group1.add_argument('-D', '--dump', action="count", dest="dump", help='Backup type is DUMP')
     group1.add_argument('-H', '--hotcopy', action="count", dest="hotcopy", help='Backup type is Hotcopy')
@@ -18,35 +27,35 @@ def main():
     results = parser.parse_args()
     if results.dump:
         if results.hour:
-            backup_db('hr_', 30, 'dump')
+            backup_db('hr_', HR_NUM_COPY, 'dump')
         elif results.day:
-            backup_db('dl_', 7, 'dump')
+            backup_db('dl_', DL_NUM_COPY, 'dump')
         elif results.week:
-            backup_db('wk_', 4, 'dump')
+            backup_db('wk_', WK_NUM_COPY, 'dump')
         elif results.month:
-            backup_db('mnt_', 3, 'dump')
+            backup_db('mnt_', MN_NUM_COPY, 'dump')
         else:
             print parser.print_help()
     elif results.hotcopy:
         if results.hour:
-            backup_db('hr_', 30, 'hotcopy')
+            backup_db('hr_', HR_NUM_COPY, 'hotcopy')
         elif results.day:
-            backup_db('dl_', 7, 'hotcopy')
+            backup_db('dl_', DL_NUM_COPY, 'hotcopy')
         elif results.week:
-            backup_db('wk_', 4, 'hotcopy')
+            backup_db('wk_', WK_NUM_COPY, 'hotcopy')
         elif results.month:
-            backup_db('mnt_', 3, 'hotcopy')
+            backup_db('mnt_', MN_NUM_COPY, 'hotcopy')
         else:
             print parser.print_help()
     elif results.dump_per_table:
         if results.hour:
-            backup_db_per_table('hr_', 30, 'dump')
+            backup_db_per_table('hr_', HR_NUM_COPY, 'dump')
         elif results.day:
-            backup_db_per_table('dl_', 7, 'dump')
+            backup_db_per_table('dl_', DL_NUM_COPY, 'dump')
         elif results.week:
-            backup_db_per_table('wk_', 4, 'dump')
+            backup_db_per_table('wk_', WK_NUM_COPY, 'dump')
         elif results.month:
-            backup_db_per_table('mnt_', 3, 'dump')
+            backup_db_per_table('mnt_', MN_NUM_COPY, 'dump')
         else:
             print parser.print_help()
     else:

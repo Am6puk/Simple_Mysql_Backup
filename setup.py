@@ -17,7 +17,7 @@ install_requires = [
 
 setup(
       name='simple_backup',
-      version='0.1.1',
+      version='0.1.2',
       description='Simple Mysql Backup',
       author='Andrey Rozhkov',
       author_email='am6puk@gmail.com',
