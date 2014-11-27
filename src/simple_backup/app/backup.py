@@ -157,13 +157,21 @@ def backup_db_per_table(dir_pref, num_dir, type):
 
                 print 'Now backuping database {0} Table {1}'.format(base, table)
                 if type == 'dump':
-                    cmd = ["/usr/bin/mysqldump", "-u"+user, "-p"+password, base, table, ">>", backup_dir+dir_pref+date_now+"/"+base+"/"+table+".sql.gz"]
+                    cmd = ["/usr/bin/mysqldump", "-u"+user, "-p"+password, base, table]
                     run = subprocess.Popen(cmd, stdout=subprocess.PIPE)
-                    dump_out = run.communicate()[0]
-                    print dump_out
-                    #f = gzip.open(backup_dir+dir_pref+date_now+"/"+base+"/"+table+".sql.gz", "wb")
+                    #dump_out = run.communicate()[0]
+                    #print dump_out
+                    f = gzip.open(backup_dir+dir_pref+date_now+"/"+base+"/"+table+".sql.gz", "wb")
                     #f.write(dump_out)
                     #f.close()
+                    while True:
+                        line = run.stdout.readline()
+                        if line != '':
+                            f.writelines(line)
+                            print line
+                        else:
+                            break
+                    f.close()
                 elif type == 'hotcopy':
                     cmd = ["/usr/bin/mysqlhotcopy", "-u"+user, "-p"+password, base, backup_dir+dir_pref+date_now, ">>", "/dev/null"]
                     run = subprocess.Popen(cmd, stdout=subprocess.PIPE)
