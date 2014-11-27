@@ -76,7 +76,7 @@ def backup_db(dir_pref, num_dir, type):
             cmd = None
             if type == 'dump':
                 #cmd = r'/usr/bin/mysqldump -u {0} -p{1} {2} | gzip >> "{3}"'.format(user, password, base, backup_dir+dir_pref+date_now+'/'+base+'.sql.gz')
-                cmd = ["/usr/bin/mysqldump", "-u"+user, "-p"+password, base, "|", "gzip", ">>", backup_dir+dir_pref+date_now+"/"+base+".sql.gz"]
+                cmd = ["/usr/bin/mysqldump", "-u"+user, "-p"+password, base, "gzip", ">>", backup_dir+dir_pref+date_now+"/"+base+".sql.gz"]
             elif type == 'hotcopy':
                 #cmd = r'/usr/bin/mysqlhotcopy -u {0} -p {1} {2} {3} >> /dev/null'.format(user, password, base, backup_dir+dir_pref+date_now)
                 cmd = ["/usr/bin/mysqlhotcopy", "-u"+user, "-p"+password, base, ">>", "/dev/null", backup_dir+dir_pref+date_now]
@@ -155,10 +155,10 @@ def backup_db_per_table(dir_pref, num_dir, type):
                 print 'Now backuping database {0} Table {1}'.format(base, table)
                 if type == 'dump':
                     #cmd = r'/usr/bin/mysqldump -u {0} -p{1} {2} {3} | gzip >> "{4}"'.format(user, password, base, table, backup_dir+dir_pref+date_now+'/'+base+'/'+table+'.sql.gz')
-                    cmd =["/usr/bin/mysqldump", "-u"+user, "-p"+password, base, table, "|", "gzip", ">>", backup_dir+dir_pref+date_now+"/"+base+"/"+table+".sql.gz"]
+                    cmd = ["/usr/bin/mysqldump", "-u"+user, "-p"+password, base, table, "gzip", ">>", backup_dir+dir_pref+date_now+"/"+base+"/"+table+".sql.gz"]
                 elif type == 'hotcopy':
                     #cmd = r'/usr/bin/mysqlhotcopy -u {0} -p {1} {2} {3} >> /dev/null'.format(user, password, base, backup_dir+dir_pref+date_now)
-                    cmd = ["/usr/bin/mysqlhotcopy", "-u"+user, "-p"+password, base, backup_dir+dir_pref+date_now, "|", "/dev/null"]
+                    cmd = ["/usr/bin/mysqlhotcopy", "-u"+user, "-p"+password, base, backup_dir+dir_pref+date_now, ">>", "/dev/null"]
                 else:
                     print 'Wrong type of backup'
 
