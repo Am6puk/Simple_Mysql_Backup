@@ -11,6 +11,7 @@ except ImportError:
     import MySQLdb
 from simple_backup.modules.mysql import GetBase
 from simple_backup.modules.mail import send
+import gzip
 
 name = 'simple_backup.conf'
 conf_path = '/etc/simple_backup/'
@@ -155,7 +156,7 @@ def backup_db_per_table(dir_pref, num_dir, type):
                 print 'Now backuping database {0} Table {1}'.format(base, table)
                 if type == 'dump':
                     #cmd = r'/usr/bin/mysqldump -u {0} -p{1} {2} {3} | gzip >> "{4}"'.format(user, password, base, table, backup_dir+dir_pref+date_now+'/'+base+'/'+table+'.sql.gz')
-                    cmd = ["/usr/bin/mysqldump", "-u"+user, "-p"+password, base, table, "gzip", ">>", backup_dir+dir_pref+date_now+"/"+base+"/"+table+".sql.gz"]
+                    cmd = ["/usr/bin/mysqldump", "-u"+user, "-p"+password, base, table]
                 elif type == 'hotcopy':
                     #cmd = r'/usr/bin/mysqlhotcopy -u {0} -p {1} {2} {3} >> /dev/null'.format(user, password, base, backup_dir+dir_pref+date_now)
                     cmd = ["/usr/bin/mysqlhotcopy", "-u"+user, "-p"+password, base, backup_dir+dir_pref+date_now, ">>", "/dev/null"]
@@ -163,15 +164,19 @@ def backup_db_per_table(dir_pref, num_dir, type):
                     print 'Wrong type of backup'
 
                 run = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+                dump_out = run.communicate()[0]
+                f = gzip.open(backup_dir+dir_pref+date_now+"/"+base+"/"+table+".sql.gz", "wb")
+                f.write(dump_out)
+                f.close()
                 #run.wait()
                 #out = run.communicate()
                 #print out
-                while True:
-                    line = run.stdout.readline()
-                    if line != '':
-                        return line
-                    else:
-                        break
+                #while True:
+                #    line = run.stdout.readline()
+                #    if line != '':
+                #        return line
+                #    else:
+                #        break
     except MySQLdb.OperationalError, err:
         error = unicode(err)
         print error
