@@ -76,7 +76,7 @@ def backup_db(dir_pref, num_dir, type):
                 os.mkdir(backup_dir+dir_pref+date_now)
             cmd = None
             if type == 'dump':
-                cmd = ["/usr/bin/mysqldump", "-u"+user, "-p"+password, "--single-transaction", "--max_allowed_packet=5G", base]
+                cmd = ["/usr/bin/mysqldump", "-u"+user, "-p"+password, "--single-transaction", "--max_allowed_packet=2G", base]
                 run = subprocess.Popen(cmd, stdout=subprocess.PIPE)
                 dump_out = run.communicate()[0]
                 #print dump_out
@@ -164,7 +164,7 @@ def backup_db_per_table(dir_pref, num_dir, type):
 
                 print 'Now backuping database {0} Table {1}'.format(base, table)
                 if type == 'dump':
-                    cmd = ["/usr/bin/mysqldump", "-u"+user, "-p"+password, "--single-transaction", "--max_allowed_packet=5G", base, table]
+                    cmd = ["/usr/bin/mysqldump", "-u"+user, "-p"+password, "--single-transaction", "--max_allowed_packet=2G", base, table]
                     run = subprocess.Popen(cmd, stdout=subprocess.PIPE)
                     #dump_out = run.communicate()[0]
                     #print dump_out
