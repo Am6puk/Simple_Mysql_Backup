@@ -29,47 +29,47 @@ def main():
     if results.dump:
         if results.hour:
             results = backup_db('hr_', HR_NUM_COPY, 'dump')
-            print sys.stdout >> results
+            print >> sys.stdout, results
         elif results.day:
             results = backup_db('dl_', DL_NUM_COPY, 'dump')
-            print sys.stdout >> results
+            print >> sys.stdout, results
         elif results.week:
             results = backup_db('wk_', WK_NUM_COPY, 'dump')
-            print sys.stdout >> results
+            print >> sys.stdout, results
 
         elif results.month:
             results = backup_db('mnt_', MN_NUM_COPY, 'dump')
-            print sys.stdout >> results
+            print >> sys.stdout, results
         else:
             print parser.print_help()
     elif results.hotcopy:
         if results.hour:
             results = backup_db('hr_', HR_NUM_COPY, 'hotcopy')
-            print sys.stdout >> results
+            print >> sys.stdout, results
         elif results.day:
             results = backup_db('dl_', DL_NUM_COPY, 'hotcopy')
-            print sys.stdout >> results
+            print >> sys.stdout, results
         elif results.week:
             results = backup_db('wk_', WK_NUM_COPY, 'hotcopy')
-            print sys.stdout >> results
+            print >> sys.stdout, results
         elif results.month:
             results = backup_db('mnt_', MN_NUM_COPY, 'hotcopy')
-            print sys.stdout >> results
+            print >> sys.stdout, results
         else:
             print parser.print_help()
     elif results.dump_per_table:
         if results.hour:
             results = backup_db_per_table('hr_', HR_NUM_COPY, 'dump')
-            print sys.stdout >> results
+            print >> sys.stdout, results
         elif results.day:
             results = backup_db_per_table('dl_', DL_NUM_COPY, 'dump')
-            print sys.stdout >> results
+            print >> sys.stdout, results
         elif results.week:
             results = backup_db_per_table('wk_', WK_NUM_COPY, 'dump')
-            print sys.stdout >> results
+            print >> sys.stdout, results
         elif results.month:
             results = backup_db_per_table('mnt_', MN_NUM_COPY, 'dump')
-            print sys.stdout >> results
+            print >> sys.stdout, results
         else:
             print parser.print_help()
     else:
