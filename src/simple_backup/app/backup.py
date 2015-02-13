@@ -167,7 +167,7 @@ def backup_db_per_table(dir_pref, num_dir, type):
                     f = open(backup_dir+dir_pref+date_now+"/"+base+"/"+table+".sql.gz", "wb")
                     cmd = ["/usr/bin/mysqldump", "-u"+user, "-p"+password, "--single-transaction", "--max_allowed_packet=1G", base, table]
                     run = subprocess.Popen(cmd, stdout=subprocess.PIPE)
-                    rn2 = Popen('gzip', stdin=run.stdout, stdout=f)
+                    rn2 = subprocess.Popen('gzip', stdin=run.stdout, stdout=f)
                     rn2.wait()
                     run.wait()
                     #dump_out = run.communicate()[0]
