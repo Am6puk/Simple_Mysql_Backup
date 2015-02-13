@@ -1,4 +1,4 @@
-#Simple Mysql Backup v0.1.3
+#Simple Mysql Backup v0.1.4
 
 
 ##Install requirements for Debian/Ubuntu

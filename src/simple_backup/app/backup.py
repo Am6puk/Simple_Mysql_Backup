@@ -11,7 +11,6 @@ except ImportError:
     import MySQLdb
 from simple_backup.modules.mysql import GetBase
 from simple_backup.modules.mail import send
-import gzip
 
 name = 'simple_backup.conf'
 conf_path = '/etc/simple_backup/'
@@ -76,20 +75,13 @@ def backup_db(dir_pref, num_dir, type):
                 os.mkdir(backup_dir+dir_pref+date_now)
             cmd = None
             if type == 'dump':
+                f = open(backup_dir+dir_pref+date_now+"/"+base+".sql.gz", "wb")
                 cmd = ["/usr/bin/mysqldump", "-u"+user, "-p"+password, "--single-transaction", "--max_allowed_packet=1G", base]
                 run = subprocess.Popen(cmd, stdout=subprocess.PIPE)
-                dump_out = run.communicate()[0]
-                #print dump_out
-                f = gzip.open(backup_dir+dir_pref+date_now+"/"+base+".sql.gz", "wb")
-                while True:
-                    line = run.stdout.readline()
-                    if line != '':
-                        f.writelines(line)
-                    else:
-                        break
+                run2 = subprocess.Popen('gzip', stdin=run.stdout, stdout=f)
+                run2.wait()
+                run.wait()
                 f.close()
-                #f.write(dump_out)
-                #f.close()
             elif type == 'hotcopy':
                 cmd = ["/usr/bin/mysqlhotcopy", "-u"+user, "-p"+password, base, ">", "/dev/null", backup_dir+dir_pref+date_now]
                 run = subprocess.Popen(cmd, stdout=subprocess.PIPE)
@@ -167,24 +159,12 @@ def backup_db_per_table(dir_pref, num_dir, type):
                     f = open(backup_dir+dir_pref+date_now+"/"+base+"/"+table+".sql.gz", "wb")
                     cmd = ["/usr/bin/mysqldump", "-u"+user, "-p"+password, "--single-transaction", "--max_allowed_packet=1G", base, table]
                     run = subprocess.Popen(cmd, stdout=subprocess.PIPE)
-                    rn2 = subprocess.Popen('gzip', stdin=run.stdout, stdout=f)
-                    rn2.wait()
+                    run2 = subprocess.Popen('gzip', stdin=run.stdout, stdout=f)
+                    run2.wait()
                     run.wait()
-                    #dump_out = run.communicate()[0]
-                    #print dump_out
-                    #f = gzip.open(backup_dir+dir_pref+date_now+"/"+base+"/"+table+".sql.gz", "wb")
-                    #f.write(dump_out)
-                    #f.close()
-                    #while True:
-                    #    line = run.stdout.readline()
-                    #    if line != '':
-                    #        f.writelines(line)
-                            #print line
-                    #    else:
-                    #        break
-                    #f.close()
+                    f.close()
                 elif type == 'hotcopy':
-                    cmd = ["/usr/bin/mysqlhotcopy", "-u"+user, "-p"+password, base, backup_dir+dir_pref+date_now, ">>", "/dev/null"]
+                    cmd = ["/usr/bin/mysqlhotcopy", "-u"+user, "-p"+password, base, backup_dir+dir_pref+date_now]
                     run = subprocess.Popen(cmd, stdout=subprocess.PIPE)
                     while True:
                         line = run.stdout.readline()
