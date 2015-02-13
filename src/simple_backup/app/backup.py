@@ -3,6 +3,8 @@ import datetime
 import shutil
 import subprocess
 import ConfigParser
+import glob
+import time
 try:
     import MySQLdb
 except ImportError:
@@ -25,6 +27,38 @@ DUMP_PERF = config.get(section, 'DUMP_PERF')
 HOTCOPY_PREF = config.get(section, 'HOTCOPY_PREF')
 
 
+def sort_dir(pref):
+
+    root = BACKUP_DIR+DUMP_PERF+pref+'*'
+
+    date_file_list = []
+    for folder in glob.glob(root):
+        stats = os.stat(folder)
+        lastmod_date = time.localtime(stats[8])
+        date_file_tuple = lastmod_date, folder
+        date_file_list.append(date_file_tuple)
+
+    date_file_list.sort()
+    date_file_list.reverse()  # newest mod date now first
+    full_clear_list = []
+    for folder1 in date_file_list:
+        full_clear_list.append(folder1[1])
+    return full_clear_list
+
+
+def delete_old_dirs(full_clear_list, num_dir):
+
+    removal_list = []
+    for old_dir in full_clear_list:
+            if old_dir not in full_clear_list[0:int(num_dir)]:
+                    removal_list.append(old_dir)
+    print removal_list
+    if removal_list:
+        for rm_dir in removal_list:
+            shutil.rmtree(rm_dir)
+    else:
+        pass
+
 
 def backup_db(dir_pref, num_dir, type):
     dt = datetime.datetime.now()
@@ -41,28 +75,14 @@ def backup_db(dir_pref, num_dir, type):
     else:
         print 'Wrong type of backup'
 
-    list = []
 
     if not os.path.exists(BACKUP_DIR):
         os.mkdir(BACKUP_DIR)
     if not os.path.exists(backup_dir):
         os.mkdir(backup_dir)
-    list_dir_all = os.listdir(backup_dir)
-    for dir in list_dir_all:
-        if dir.startswith(dir_pref):
-            list.append(dir)
-    #print list
-    count_dir = len(list)
-    age = []
-    dic = {}
-    for x in list:
-        age.append(os.path.getmtime(backup_dir+x))
-        dic[os.path.getmtime(backup_dir+x)] = x
-        age.sort()
-        dic[age[0]]
 
-    if count_dir > num_dir:
-        shutil.rmtree(backup_dir+dic[age[0]])
+    dir_sorted_list = sort_dir(dir_pref)
+    delete_old_dirs(dir_sorted_list, num_dir)
 
     try:
         bases = GetBase()
@@ -115,28 +135,14 @@ def backup_db_per_table(dir_pref, num_dir, type):
     else:
         print 'Wrong type of backup'
 
-    list = []
 
     if not os.path.exists(BACKUP_DIR):
         os.mkdir(BACKUP_DIR)
     if not os.path.exists(backup_dir):
         os.mkdir(backup_dir)
-    list_dir_all = os.listdir(backup_dir)
-    for dir in list_dir_all:
-        if dir.startswith(dir_pref):
-            list.append(dir)
-    #print list
-    count_dir = len(list)
-    age = []
-    dic = {}
-    for x in list:
-        age.append(os.path.getmtime(backup_dir+x))
-        dic[os.path.getmtime(backup_dir+x)] = x
-        age.sort()
-        dic[age[0]]
 
-    if count_dir > num_dir:
-        shutil.rmtree(backup_dir+dic[age[0]])
+    dir_sorted_list = sort_dir(dir_pref)
+    delete_old_dirs(dir_sorted_list, num_dir)
 
     try:
         bases = GetBase()
