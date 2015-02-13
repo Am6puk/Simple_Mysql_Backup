@@ -20,12 +20,15 @@ def main():
     group1.add_argument('-D', '--dump', action="count", dest="dump", help='Backup type is DUMP')
     group1.add_argument('-H', '--hotcopy', action="count", dest="hotcopy", help='Backup type is Hotcopy')
     group1.add_argument('-T', '--tables', action="count", dest="dump_per_table", help='Backup type is Dump per table')
-    group1.add_argument('-V', '--version', action="count", dest="version", help='Show current version')
+
     group2 = parser.add_mutually_exclusive_group()
     group2.add_argument('-hr', '--hour', action="count", dest="hour", help='Hour backup')
     group2.add_argument('-d', '--day', action="count",  dest="day", help='Day backup')
     group2.add_argument('-w', '--week', action="count",  dest="week", help='Week backup')
     group2.add_argument('-m', '--month', action="count",  dest="month", help='Month backup')
+    group3 = parser.add_mutually_exclusive_group()
+    group3.add_argument('-V', '--Version', action="count", dest="version", help='Show current version')
+    group3.add_argument('-v', '--version', action="count", dest="version", help='Show current version')
     results = parser.parse_args()
     if results.dump:
         if results.hour:
@@ -74,7 +77,8 @@ def main():
         else:
             print parser.print_help()
     elif results.version:
-        print >> sys.stdout, "v0.1.4"
+        ver = """Simple Mysql Backup v0.1.4 """
+        print >> sys.stdout, ver
     else:
         print parser.print_help()
 
