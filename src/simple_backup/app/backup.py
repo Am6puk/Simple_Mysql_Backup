@@ -91,7 +91,7 @@ def backup_db(dir_pref, num_dir, type):
                 #f.write(dump_out)
                 #f.close()
             elif type == 'hotcopy':
-                cmd = ["/usr/bin/mysqlhotcopy", "-u"+user, "-p"+password, base, ">>", "/dev/null", backup_dir+dir_pref+date_now]
+                cmd = ["/usr/bin/mysqlhotcopy", "-u"+user, "-p"+password, base, ">", "/dev/null", backup_dir+dir_pref+date_now]
                 run = subprocess.Popen(cmd, stdout=subprocess.PIPE)
                 while True:
                     line = run.stdout.readline()
@@ -164,21 +164,21 @@ def backup_db_per_table(dir_pref, num_dir, type):
 
                 print 'Now backuping database {0} Table {1}'.format(base, table)
                 if type == 'dump':
-                    cmd = ["/usr/bin/mysqldump", "-u"+user, "-p"+password, "--single-transaction", "--max_allowed_packet=1G", base, table]
+                    cmd = ["/usr/bin/mysqldump", "-u"+user, "-p"+password, "--single-transaction", "--max_allowed_packet=1G", base, table, "| gzip >", backup_dir+dir_pref+date_now+"/"+base+"/"+table+".sql.gz"st]
                     run = subprocess.Popen(cmd, stdout=subprocess.PIPE)
                     #dump_out = run.communicate()[0]
                     #print dump_out
-                    f = gzip.open(backup_dir+dir_pref+date_now+"/"+base+"/"+table+".sql.gz", "wb")
+                    #f = gzip.open(backup_dir+dir_pref+date_now+"/"+base+"/"+table+".sql.gz", "wb")
                     #f.write(dump_out)
                     #f.close()
-                    while True:
-                        line = run.stdout.readline()
-                        if line != '':
-                            f.writelines(line)
+                    #while True:
+                    #    line = run.stdout.readline()
+                    #    if line != '':
+                    #        f.writelines(line)
                             #print line
-                        else:
-                            break
-                    f.close()
+                    #    else:
+                    #        break
+                    #f.close()
                 elif type == 'hotcopy':
                     cmd = ["/usr/bin/mysqlhotcopy", "-u"+user, "-p"+password, base, backup_dir+dir_pref+date_now, ">>", "/dev/null"]
                     run = subprocess.Popen(cmd, stdout=subprocess.PIPE)
